@@ -4,7 +4,7 @@
 // when BT_ALLOW_INSECURE_STORE=1 is set.
 //
 // Env-var fallback is also supported so `bt` works in CI without interactive
-// login: BT_TOKEN / BT_USERNAME / BT_APP_PASSWORD / BT_PAT.
+// login: BT_TOKEN / BT_EMAIL / BT_USERNAME / BT_APP_PASSWORD / BT_PAT.
 package auth
 
 import (
@@ -23,15 +23,16 @@ const (
 	keyringService = "bt.bitbucket"
 
 	envToken       = "BT_TOKEN"        // Cloud API token or DC PAT
-	envUsername    = "BT_USERNAME"     // Cloud username (with BT_APP_PASSWORD)
-	envAppPassword = "BT_APP_PASSWORD" // Cloud app password
+	envUsername    = "BT_USERNAME"     // DC username, or Cloud username with deprecated app-password mode
+	envAppPassword = "BT_APP_PASSWORD" // Deprecated Cloud app password
 	envPAT         = "BT_PAT"          // Explicit DC PAT
 	envEmail       = "BT_EMAIL"        // Cloud email (with BT_TOKEN)
 	envInsecure    = "BT_ALLOW_INSECURE_STORE"
 )
 
 // Credential captures what we need to authenticate one request. Exactly
-// one of Token (bearer or basic via email) or (Username + AppPassword)
+// one of Token (basic via email for Cloud API tokens) or
+// (Username + AppPassword)
 // is populated.
 type Credential struct {
 	Kind        config.Kind `json:"kind"`

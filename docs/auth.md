@@ -26,8 +26,11 @@ Switch with `bt context use <name>`, inspect with `bt context show`.
 `bt auth login` stores credentials in the OS keyring under the service
 `bt:<context-name>`:
 
-- **Cloud**: username + app password (create at
-  <https://bitbucket.org/account/settings/app-passwords/>).
+- **Cloud**: Atlassian account email + API token. `bt auth login` can open
+  the browser directly to
+  <https://id.atlassian.com/manage-profile/security/api-tokens>.
+  Bitbucket Cloud app passwords are deprecated and stop working on
+  `2026-06-09`.
 - **DC**: personal access token (Profile → Manage account → Personal
   access tokens).
 
@@ -37,11 +40,11 @@ For CI or headless boxes where the keyring isn't practical:
 
 | Variable | Meaning |
 | --- | --- |
-| `BT_TOKEN` | DC personal access token, or Cloud app password. |
-| `BT_USERNAME` | Cloud username or DC username. |
-| `BT_APP_PASSWORD` | Cloud app password (alias for `BT_TOKEN` under Cloud). |
+| `BT_TOKEN` | Cloud API token or DC personal access token. |
+| `BT_EMAIL` | Cloud Atlassian account email (used with `BT_TOKEN`). |
+| `BT_USERNAME` | DC username, or Cloud username only for legacy app-password mode. |
+| `BT_APP_PASSWORD` | Deprecated Cloud app password. |
 | `BT_PAT` | DC personal access token (alias under DC). |
-| `BT_EMAIL` | Optional; used only for commit authoring helpers. |
 
 Env vars win when both are set — handy for impersonating a bot in CI
 without touching the keyring.

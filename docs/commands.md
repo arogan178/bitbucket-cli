@@ -8,7 +8,7 @@ Full command reference. Every list/view command supports `--json`,
 
 | Command | What it does |
 | --- | --- |
-| `bt auth login` | Interactive sign-in. Stores creds in the keyring. |
+| `bt auth login` | Guided sign-in. Can open the browser for token creation, validates the creds, then stores them in the keyring. |
 | `bt auth logout` | Remove creds for the current context. |
 | `bt auth status` | Show authenticated user / host. |
 
@@ -18,7 +18,7 @@ Full command reference. Every list/view command supports `--json`,
 | --- | --- |
 | `bt context list` | List configured contexts. |
 | `bt context use <name>` | Set the active context. |
-| `bt context create --name … --kind cloud|dc --host … --workspace …` | Add a context. |
+| `bt context create --name … --kind cloud\|dc --host … --workspace …` | Add a context. |
 | `bt context show` | Print the active context. |
 | `bt context delete <name>` | Remove a context + its keyring entry. |
 
@@ -41,9 +41,9 @@ Full command reference. Every list/view command supports `--json`,
 | `bt pr view <id>` | Show PR metadata, description, checks. |
 | `bt pr create` | Create a PR (`--title`, `--body`, `--base`, `--head`). |
 | `bt pr edit <id>` | Update title/body/reviewers. |
-| `bt pr merge <id>` | Merge with `--strategy=merge|squash|fast-forward`. |
-| `bt pr decline <id>` | Decline / close without merging. |
-| `bt pr approve <id>` / `bt pr unapprove <id>` | Approvals. |
+| `bt pr merge <id>` | Merge with `--strategy=merge\|squash\|fast-forward`. |
+| `bt pr decline <id>` | Decline or close without merging. |
+| `bt pr approve <id>` or `bt pr unapprove <id>` | Approvals. |
 | `bt pr comment <id>` | Add a comment. |
 | `bt pr checks <id>` | List build statuses. |
 | `bt pr checkout <id>` | Fetch + check out the PR branch. |
@@ -62,7 +62,7 @@ Full command reference. Every list/view command supports `--json`,
 
 See the [Diffs guide](diffs.md) for full detail.
 
-```
+```text
 bt compare <base>..<head>      # two-dot
 bt compare <base>...<head>     # three-dot (merge-base)
 bt compare <base>...<head> --stat

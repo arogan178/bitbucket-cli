@@ -1,7 +1,7 @@
 # Quick start
 
 ```bash
-# 1. Sign in (interactive). Stores creds in the OS keyring.
+# 1. Sign in (interactive). Opens the browser for Cloud API tokens and stores creds in the OS keyring.
 bt auth login
 
 # 2. Pick a context if you have many Bitbucket instances.
@@ -30,8 +30,8 @@ bt compare main...feat/kafka-38 --commits --json
 ## Non-interactive / CI
 
 ```bash
-export BT_TOKEN=…               # Bitbucket Cloud app password / DC PAT
-export BT_USERNAME=ada           # Cloud username, or DC username
+export BT_TOKEN=…               # Bitbucket Cloud API token / DC PAT
+export BT_EMAIL=ada@example.com  # Cloud only; use BT_USERNAME for DC
 bt pr list --repo myorg/service --json
 ```
 
