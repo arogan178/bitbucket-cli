@@ -5,9 +5,9 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/arogan178/bitbucket-cli/internal/bitbucket"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
-	"github.com/arogan178/bitbucket-cli/internal/bitbucket"
 )
 
 func newRepoCmd(g *GlobalFlags) *cobra.Command {

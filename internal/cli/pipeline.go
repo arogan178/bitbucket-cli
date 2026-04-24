@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/spf13/cobra"
 	"github.com/arogan178/bitbucket-cli/internal/bitbucket"
+	"github.com/spf13/cobra"
 )
 
 func newPipelineCmd(g *GlobalFlags) *cobra.Command {

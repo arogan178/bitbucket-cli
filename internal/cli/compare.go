@@ -6,8 +6,8 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/spf13/cobra"
 	"github.com/arogan178/bitbucket-cli/internal/output"
+	"github.com/spf13/cobra"
 )
 
 // newCompareCmd exposes `bt compare <base>..<head>` (two-dot) and

@@ -10,11 +10,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/spf13/cobra"
 	"github.com/arogan178/bitbucket-cli/internal/auth"
 	"github.com/arogan178/bitbucket-cli/internal/bitbucket"
 	"github.com/arogan178/bitbucket-cli/internal/config"
 	"github.com/arogan178/bitbucket-cli/internal/output"
+	"github.com/spf13/cobra"
 )
 
 // BuildInfo is populated at build time.

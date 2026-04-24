@@ -6,9 +6,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/spf13/cobra"
 	"github.com/arogan178/bitbucket-cli/internal/auth"
 	"github.com/arogan178/bitbucket-cli/internal/config"
+	"github.com/spf13/cobra"
 )
 
 func newAuthCmd(g *GlobalFlags) *cobra.Command {
@@ -22,15 +22,15 @@ func newAuthCmd(g *GlobalFlags) *cobra.Command {
 
 func newAuthLoginCmd(g *GlobalFlags) *cobra.Command {
 	var (
-		host       string
-		kind       string
+		host        string
+		kind        string
 		contextName string
-		username   string
-		token      string
-		workspace  string
-		project    string
-		useWeb     bool
-		setActive  bool
+		username    string
+		token       string
+		workspace   string
+		project     string
+		useWeb      bool
+		setActive   bool
 	)
 	cmd := &cobra.Command{
 		Use:   "login",
