@@ -1,0 +1,48 @@
+site_name: bt
+site_description: A gh-style CLI for Bitbucket Cloud and Data Center.
+site_url: https://arogan178.github.io/bitbucket-cli
+repo_url: https://github.com/arogan178/bitbucket-cli
+repo_name: arogan178/bitbucket-cli
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - content.code.copy
+    - content.action.edit
+    - search.suggest
+    - search.highlight
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+nav:
+  - Home: index.md
+  - Install: install.md
+  - Quick start: quickstart.md
+  - Diffs: diffs.md
+  - Commands: commands.md
+  - Contexts & auth: auth.md
+  - Scripting: scripting.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: true

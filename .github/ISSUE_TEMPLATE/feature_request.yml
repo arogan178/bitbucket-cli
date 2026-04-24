@@ -1,0 +1,19 @@
+name: Feature request
+description: Suggest a new bt subcommand, flag, or capability.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Ideally a concrete CLI surface (`bt foo bar --baz`).
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

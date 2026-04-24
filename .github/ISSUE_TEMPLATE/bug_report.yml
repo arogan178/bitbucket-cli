@@ -1,0 +1,31 @@
+name: Bug report
+description: Report a reproducible bug in bt.
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: bt version
+      description: Output of `bt --version`
+    validations:
+      required: true
+  - type: dropdown
+    id: backend
+    attributes:
+      label: Bitbucket backend
+      options: [Cloud, Data Center, Both]
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: Exact command, redacted output, and what you expected.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: OS, shell, terminal, pager (delta? less?).

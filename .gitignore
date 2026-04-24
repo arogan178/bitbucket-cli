@@ -1,0 +1,7 @@
+/bt
+site/
+dist/
+coverage.out
+*.patch
+*.log
+.DS_Store

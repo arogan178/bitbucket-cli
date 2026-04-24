@@ -1,0 +1,132 @@
+version: 2
+
+project_name: bt
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: bt
+    main: ./cmd/bt
+    binary: bt
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X main.Version={{ .Version }}
+      - -X main.Commit={{ .Commit }}
+      - -X main.Date={{ .Date }}
+
+archives:
+  - format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - LICENSE
+      - README.md
+      - CHANGELOG.md
+
+checksum:
+  name_template: "{{ .ProjectName }}_{{ .Version }}_checksums.txt"
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+
+signs:
+  - id: cosign
+    cmd: cosign
+    args:
+      - sign-blob
+      - --yes
+      - --output-signature=${signature}
+      - --output-certificate=${certificate}
+      - ${artifact}
+    artifacts: checksum
+    output: true
+
+sboms:
+  - artifacts: archive
+
+dockers:
+  - image_templates:
+      - "ghcr.io/arogan178/bitbucket-cli:{{ .Version }}-amd64"
+      - "ghcr.io/arogan178/bitbucket-cli:latest-amd64"
+    goos: linux
+    goarch: amd64
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.source=https://github.com/arogan178/bitbucket-cli"
+      - "--label=org.opencontainers.image.version={{ .Version }}"
+      - "--label=org.opencontainers.image.licenses=Apache-2.0"
+  - image_templates:
+      - "ghcr.io/arogan178/bitbucket-cli:{{ .Version }}-arm64"
+      - "ghcr.io/arogan178/bitbucket-cli:latest-arm64"
+    goos: linux
+    goarch: arm64
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/arm64"
+      - "--label=org.opencontainers.image.source=https://github.com/arogan178/bitbucket-cli"
+      - "--label=org.opencontainers.image.version={{ .Version }}"
+      - "--label=org.opencontainers.image.licenses=Apache-2.0"
+
+docker_manifests:
+  - name_template: "ghcr.io/arogan178/bitbucket-cli:{{ .Version }}"
+    image_templates:
+      - "ghcr.io/arogan178/bitbucket-cli:{{ .Version }}-amd64"
+      - "ghcr.io/arogan178/bitbucket-cli:{{ .Version }}-arm64"
+  - name_template: "ghcr.io/arogan178/bitbucket-cli:latest"
+    image_templates:
+      - "ghcr.io/arogan178/bitbucket-cli:latest-amd64"
+      - "ghcr.io/arogan178/bitbucket-cli:latest-arm64"
+
+brews:
+  - name: bt
+    repository:
+      owner: arogan178
+      name: homebrew-bitbucket-cli
+      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
+    homepage: https://github.com/arogan178/bitbucket-cli
+    description: "gh-style CLI for Bitbucket Cloud and Data Center"
+    license: Apache-2.0
+    test: |
+      system "#{bin}/bt --version"
+    install: |
+      bin.install "bt"
+
+scoops:
+  - name: bt
+    repository:
+      owner: arogan178
+      name: scoop-bitbucket-cli
+      token: "{{ .Env.SCOOP_TAP_TOKEN }}"
+    homepage: https://github.com/arogan178/bitbucket-cli
+    description: "gh-style CLI for Bitbucket Cloud and Data Center"
+    license: Apache-2.0
+
+release:
+  github:
+    owner: arogan178
+    name: bitbucket-cli
+  draft: false
+  prerelease: auto
+  mode: append
