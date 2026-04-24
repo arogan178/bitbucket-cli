@@ -60,9 +60,11 @@ type dcRepo struct {
 	Name          string `json:"name"`
 	Description   string `json:"description"`
 	Public        bool   `json:"public"`
-	DefaultBranch struct{ DisplayID string `json:"displayId"` } `json:"defaultBranch"`
-	Project       struct{ Key, Name string } `json:"project"`
-	Links         struct {
+	DefaultBranch struct {
+		DisplayID string `json:"displayId"`
+	} `json:"defaultBranch"`
+	Project struct{ Key, Name string } `json:"project"`
+	Links   struct {
 		Self  []struct{ Href string } `json:"self"`
 		Clone []struct {
 			Name string `json:"name"`
@@ -165,7 +167,7 @@ type dcPR struct {
 	} `json:"author"`
 	Reviewers []struct {
 		User     struct{ DisplayName, Name string } `json:"user"`
-		Approved bool                              `json:"approved"`
+		Approved bool                               `json:"approved"`
 	} `json:"reviewers"`
 	FromRef struct {
 		DisplayID string `json:"displayId"`
@@ -351,10 +353,12 @@ func (s *dcPRs) Unapprove(ctx context.Context, slug string, id int) error {
 
 func (s *dcPRs) Comment(ctx context.Context, slug string, id int, body string) (*Comment, error) {
 	var res struct {
-		ID          int   `json:"id"`
+		ID          int    `json:"id"`
 		Text        string `json:"text"`
 		CreatedDate int64  `json:"createdDate"`
-		Author      struct{ DisplayName string `json:"displayName"` } `json:"author"`
+		Author      struct {
+			DisplayName string `json:"displayName"`
+		} `json:"author"`
 	}
 	payload := map[string]any{"text": body}
 	if err := s.c.http.doJSON(ctx, "POST", s.path(slug, id)+"/comments", nil, payload, &res); err != nil {
@@ -365,10 +369,12 @@ func (s *dcPRs) Comment(ctx context.Context, slug string, id int, body string) (
 
 func (s *dcPRs) Comments(ctx context.Context, slug string, id int) ([]Comment, error) {
 	var page dcPage[struct {
-		ID          int   `json:"id"`
+		ID          int    `json:"id"`
 		Text        string `json:"text"`
 		CreatedDate int64  `json:"createdDate"`
-		Author      struct{ DisplayName string `json:"displayName"` } `json:"author"`
+		Author      struct {
+			DisplayName string `json:"displayName"`
+		} `json:"author"`
 	}]
 	if err := s.c.http.doJSON(ctx, "GET", s.path(slug, id)+"/activities", nil, nil, &page); err != nil {
 		return nil, err
@@ -433,10 +439,10 @@ func (s *dcBranches) List(ctx context.Context, slug string, opts ListOptions) ([
 		params["filterText"] = opts.Query
 	}
 	var page dcPage[struct {
-		ID          string `json:"id"`
-		DisplayID   string `json:"displayId"`
+		ID           string `json:"id"`
+		DisplayID    string `json:"displayId"`
 		LatestCommit string `json:"latestCommit"`
-		IsDefault   bool   `json:"isDefault"`
+		IsDefault    bool   `json:"isDefault"`
 	}]
 	if err := s.c.http.doJSON(ctx, "GET", s.base(slug), params, nil, &page); err != nil {
 		return nil, err
@@ -502,12 +508,12 @@ func (s *dcCompare) Commits(ctx context.Context, slug, from, to string) ([]Commi
 		"to":   from,
 	}
 	var page dcPage[struct {
-		ID            string `json:"id"`
-		DisplayID     string `json:"displayId"`
-		Message       string `json:"message"`
-		AuthorTimestamp int64 `json:"authorTimestamp"`
-		Author        struct {
-			DisplayName string `json:"displayName"`
+		ID              string `json:"id"`
+		DisplayID       string `json:"displayId"`
+		Message         string `json:"message"`
+		AuthorTimestamp int64  `json:"authorTimestamp"`
+		Author          struct {
+			DisplayName  string `json:"displayName"`
 			EmailAddress string `json:"emailAddress"`
 		} `json:"author"`
 	}]

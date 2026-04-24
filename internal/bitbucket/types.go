@@ -25,7 +25,7 @@ type PullRequest struct {
 	ID          int       `json:"id"`
 	Title       string    `json:"title"`
 	Description string    `json:"description,omitempty"`
-	State       string    `json:"state"`   // OPEN, MERGED, DECLINED, SUPERSEDED
+	State       string    `json:"state"` // OPEN, MERGED, DECLINED, SUPERSEDED
 	Author      string    `json:"author,omitempty"`
 	Source      string    `json:"source_branch"`
 	Target      string    `json:"target_branch"`
@@ -48,7 +48,7 @@ type Branch struct {
 type Pipeline struct {
 	UUID      string    `json:"uuid"`
 	Number    int       `json:"number,omitempty"`
-	State     string    `json:"state"`      // RUNNING, COMPLETED, PAUSED, etc.
+	State     string    `json:"state"`            // RUNNING, COMPLETED, PAUSED, etc.
 	Result    string    `json:"result,omitempty"` // SUCCESSFUL, FAILED, STOPPED
 	Ref       string    `json:"ref,omitempty"`
 	Commit    string    `json:"commit,omitempty"`

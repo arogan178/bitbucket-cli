@@ -290,10 +290,10 @@ func (s *cloudPRs) Create(ctx context.Context, slug string, in CreatePullRequest
 		revs = append(revs, map[string]string{"username": r})
 	}
 	body := map[string]any{
-		"title":       in.Title,
-		"description": in.Description,
-		"source":      map[string]any{"branch": map[string]string{"name": in.Source}},
-		"destination": map[string]any{"branch": map[string]string{"name": in.Target}},
+		"title":               in.Title,
+		"description":         in.Description,
+		"source":              map[string]any{"branch": map[string]string{"name": in.Source}},
+		"destination":         map[string]any{"branch": map[string]string{"name": in.Target}},
 		"close_source_branch": in.CloseSource,
 	}
 	if len(revs) > 0 {
@@ -362,10 +362,14 @@ func (s *cloudPRs) Unapprove(ctx context.Context, slug string, id int) error {
 func (s *cloudPRs) Comment(ctx context.Context, slug string, id int, body string) (*Comment, error) {
 	payload := map[string]any{"content": map[string]string{"raw": body}}
 	var res struct {
-		ID        int `json:"id"`
+		ID        int       `json:"id"`
 		CreatedOn time.Time `json:"created_on"`
-		User      struct{ DisplayName string `json:"display_name"` } `json:"user"`
-		Content   struct{ Raw string `json:"raw"` } `json:"content"`
+		User      struct {
+			DisplayName string `json:"display_name"`
+		} `json:"user"`
+		Content struct {
+			Raw string `json:"raw"`
+		} `json:"content"`
 	}
 	if err := s.c.http.doJSON(ctx, "POST", s.prPath(slug, id)+"/comments", nil, payload, &res); err != nil {
 		return nil, err
@@ -377,8 +381,12 @@ func (s *cloudPRs) Comments(ctx context.Context, slug string, id int) ([]Comment
 	var page cloudPage[struct {
 		ID        int       `json:"id"`
 		CreatedOn time.Time `json:"created_on"`
-		User      struct{ DisplayName string `json:"display_name"` } `json:"user"`
-		Content   struct{ Raw string `json:"raw"` } `json:"content"`
+		User      struct {
+			DisplayName string `json:"display_name"`
+		} `json:"user"`
+		Content struct {
+			Raw string `json:"raw"`
+		} `json:"content"`
 	}]
 	if err := s.c.http.doJSON(ctx, "GET", s.prPath(slug, id)+"/comments", nil, nil, &page); err != nil {
 		return nil, err
@@ -451,7 +459,9 @@ func (s *cloudBranches) Create(ctx context.Context, slug, name, from string) (*B
 	}
 	var res struct {
 		Name   string `json:"name"`
-		Target struct{ Hash string `json:"hash"` } `json:"target"`
+		Target struct {
+			Hash string `json:"hash"`
+		} `json:"target"`
 	}
 	if err := s.c.http.doJSON(ctx, "POST", s.path(slug), nil, body, &res); err != nil {
 		return nil, err
@@ -477,9 +487,9 @@ func (s *cloudPipelines) base(slug string) string {
 }
 
 type cloudPipeline struct {
-	UUID      string    `json:"uuid"`
-	BuildNumber int     `json:"build_number"`
-	State     struct {
+	UUID        string `json:"uuid"`
+	BuildNumber int    `json:"build_number"`
+	State       struct {
 		Name   string `json:"name"`
 		Result struct {
 			Name string `json:"name"`
@@ -491,8 +501,12 @@ type cloudPipeline struct {
 			Hash string `json:"hash"`
 		} `json:"commit"`
 	} `json:"target"`
-	Creator struct{ DisplayName string `json:"display_name"` } `json:"creator"`
-	Links   struct{ HTML struct{ Href string } `json:"html"` } `json:"links"`
+	Creator struct {
+		DisplayName string `json:"display_name"`
+	} `json:"creator"`
+	Links struct {
+		HTML struct{ Href string } `json:"html"`
+	} `json:"links"`
 	CreatedOn time.Time `json:"created_on"`
 }
 
@@ -591,9 +605,15 @@ type cloudIssue struct {
 	State    string `json:"state"`
 	Kind     string `json:"kind"`
 	Priority string `json:"priority"`
-	Reporter struct{ DisplayName string `json:"display_name"` } `json:"reporter"`
-	Assignee struct{ DisplayName string `json:"display_name"` } `json:"assignee"`
-	Links    struct{ HTML struct{ Href string } `json:"html"` } `json:"links"`
+	Reporter struct {
+		DisplayName string `json:"display_name"`
+	} `json:"reporter"`
+	Assignee struct {
+		DisplayName string `json:"display_name"`
+	} `json:"assignee"`
+	Links struct {
+		HTML struct{ Href string } `json:"html"`
+	} `json:"links"`
 	CreatedOn time.Time `json:"created_on"`
 }
 
@@ -669,8 +689,12 @@ func (s *cloudIssues) Comment(ctx context.Context, slug string, id int, body str
 	var res struct {
 		ID        int       `json:"id"`
 		CreatedOn time.Time `json:"created_on"`
-		User      struct{ DisplayName string `json:"display_name"` } `json:"user"`
-		Content   struct{ Raw string `json:"raw"` } `json:"content"`
+		User      struct {
+			DisplayName string `json:"display_name"`
+		} `json:"user"`
+		Content struct {
+			Raw string `json:"raw"`
+		} `json:"content"`
 	}
 	if err := s.c.http.doJSON(ctx, "POST", fmt.Sprintf("%s/%d/comments", s.base(slug), id), nil, payload, &res); err != nil {
 		return nil, err
@@ -688,11 +712,11 @@ func (s *cloudWebhooks) base(slug string) string {
 
 func (s *cloudWebhooks) List(ctx context.Context, slug string) ([]Webhook, error) {
 	var page cloudPage[struct {
-		UUID   string   `json:"uuid"`
-		URL    string   `json:"url"`
-		Description string `json:"description"`
-		Events []string `json:"events"`
-		Active bool     `json:"active"`
+		UUID        string   `json:"uuid"`
+		URL         string   `json:"url"`
+		Description string   `json:"description"`
+		Events      []string `json:"events"`
+		Active      bool     `json:"active"`
 	}]
 	if err := s.c.http.doJSON(ctx, "GET", s.base(slug), nil, nil, &page); err != nil {
 		return nil, err
@@ -756,8 +780,8 @@ func (s *cloudCompare) Commits(ctx context.Context, slug, from, to string) ([]Co
 	// /commits/{to}?exclude={from} yields the ahead-only commits.
 	params := map[string]string{"exclude": from}
 	var page cloudPage[struct {
-		Hash    string `json:"hash"`
-		Message string `json:"message"`
+		Hash    string    `json:"hash"`
+		Message string    `json:"message"`
 		Date    time.Time `json:"date"`
 		Author  struct {
 			Raw  string `json:"raw"`
