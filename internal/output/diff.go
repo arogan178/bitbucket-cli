@@ -54,26 +54,26 @@ func RenderDiff(in io.Reader, out io.Writer, mode ColorMode) error {
 	useColor := shouldColor(mode, out)
 	br := bufio.NewReader(in)
 	bw := bufio.NewWriter(out)
-	defer bw.Flush()
 
 	for {
 		line, err := br.ReadString('\n')
 		if len(line) > 0 {
-			writeDiffLine(bw, line, useColor)
+			if err := writeDiffLine(bw, line, useColor); err != nil {
+				return err
+			}
 		}
 		if err != nil {
 			if err == io.EOF {
-				return nil
+				return bw.Flush()
 			}
 			return err
 		}
 	}
 }
 
-func writeDiffLine(w *bufio.Writer, line string, useColor bool) {
+func writeDiffLine(w *bufio.Writer, line string, useColor bool) error {
 	if !useColor {
-		w.WriteString(line)
-		return
+		return writeString(w, line)
 	}
 	switch {
 	case strings.HasPrefix(line, "diff --git"),
@@ -85,22 +85,27 @@ func writeDiffLine(w *bufio.Writer, line string, useColor bool) {
 		strings.HasPrefix(line, "rename from"),
 		strings.HasPrefix(line, "rename to"),
 		strings.HasPrefix(line, "Binary files"):
-		w.WriteString(ansiBold + ansiBlue + strings.TrimRight(line, "\n") + ansiReset + "\n")
+		return writeString(w, ansiBold+ansiBlue+strings.TrimRight(line, "\n")+ansiReset+"\n")
 	case strings.HasPrefix(line, "--- "):
-		w.WriteString(ansiBold + ansiRed + strings.TrimRight(line, "\n") + ansiReset + "\n")
+		return writeString(w, ansiBold+ansiRed+strings.TrimRight(line, "\n")+ansiReset+"\n")
 	case strings.HasPrefix(line, "+++ "):
-		w.WriteString(ansiBold + ansiGreen + strings.TrimRight(line, "\n") + ansiReset + "\n")
+		return writeString(w, ansiBold+ansiGreen+strings.TrimRight(line, "\n")+ansiReset+"\n")
 	case strings.HasPrefix(line, "@@"):
-		w.WriteString(ansiCyan + strings.TrimRight(line, "\n") + ansiReset + "\n")
+		return writeString(w, ansiCyan+strings.TrimRight(line, "\n")+ansiReset+"\n")
 	case strings.HasPrefix(line, "+"):
-		w.WriteString(ansiGreen + strings.TrimRight(line, "\n") + ansiReset + "\n")
+		return writeString(w, ansiGreen+strings.TrimRight(line, "\n")+ansiReset+"\n")
 	case strings.HasPrefix(line, "-"):
-		w.WriteString(ansiRed + strings.TrimRight(line, "\n") + ansiReset + "\n")
+		return writeString(w, ansiRed+strings.TrimRight(line, "\n")+ansiReset+"\n")
 	case strings.HasPrefix(line, "\\ No newline at end of file"):
-		w.WriteString(ansiDim + strings.TrimRight(line, "\n") + ansiReset + "\n")
+		return writeString(w, ansiDim+strings.TrimRight(line, "\n")+ansiReset+"\n")
 	default:
-		w.WriteString(line)
+		return writeString(w, line)
 	}
+}
+
+func writeString(w *bufio.Writer, s string) error {
+	_, err := w.WriteString(s)
+	return err
 }
 
 func shouldColor(mode ColorMode, w io.Writer) bool {
@@ -256,11 +261,15 @@ func RenderDiffStat(in io.Reader, out io.Writer, mode ColorMode) error {
 		if s.binary {
 			changes = "Bin"
 		}
-		fmt.Fprintf(tw, "%s\t%s\t%s\n", label, changes, graph(s.added, s.removed, useColor))
+		if _, err := fmt.Fprintf(tw, "%s\t%s\t%s\n", label, changes, graph(s.added, s.removed, useColor)); err != nil {
+			return err
+		}
 	}
-	_ = tw.Flush()
-	fmt.Fprintf(out, "\n %d file(s) changed, %d insertion(s)(+), %d deletion(s)(-)\n", len(ordered), totAdd, totRm)
-	return nil
+	if err := tw.Flush(); err != nil {
+		return err
+	}
+	_, err := fmt.Fprintf(out, "\n %d file(s) changed, %d insertion(s)(+), %d deletion(s)(-)\n", len(ordered), totAdd, totRm)
+	return err
 }
 
 // graph returns a lipgloss-free +/- histogram (max 40 chars), optionally
