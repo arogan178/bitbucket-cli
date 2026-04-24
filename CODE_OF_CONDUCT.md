@@ -4,7 +4,7 @@ This project adopts the [Contributor Covenant](https://www.contributor-covenant.
 version 2.1. By participating in this community you agree to abide by
 its terms.
 
-Report unacceptable behaviour to <conduct@yourorg.example>. All reports
+Report unacceptable behaviour to andrea.bugeja@hotmail.com. All reports
 are handled confidentially by a project maintainer.
 
 The full text is available at

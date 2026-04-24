@@ -7,7 +7,7 @@ patched.
 
 ## Reporting a vulnerability
 
-Please **do not** open a public issue. Email <security@yourorg.example>
+Please **do not** open a public issue. Email andrea.bugeja@hotmail.com
 with:
 
 - a description of the issue and its impact,
