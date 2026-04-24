@@ -17,11 +17,11 @@ import (
 )
 
 const (
-	cloudTokenManageURL      = "https://id.atlassian.com/manage-profile/security/api-tokens"
-	cloudTokenCreateDocsURL  = "https://support.atlassian.com/bitbucket-cloud/docs/create-an-api-token/"
-	cloudTokenPermsDocsURL   = "https://support.atlassian.com/bitbucket-cloud/docs/api-token-permissions/"
-	cloudAppPasswordSunset   = "2026-06-09"
-	dataCenterTokenDocsURL   = "https://confluence.atlassian.com/bitbucketserver/managing-personal-access-tokens-1005339986.html"
+	cloudTokenManageURL     = "https://id.atlassian.com/manage-profile/security/api-tokens"
+	cloudTokenCreateDocsURL = "https://support.atlassian.com/bitbucket-cloud/docs/create-an-api-token/"
+	cloudTokenPermsDocsURL  = "https://support.atlassian.com/bitbucket-cloud/docs/api-token-permissions/"
+	cloudAppPasswordSunset  = "2026-06-09"
+	dataCenterTokenDocsURL  = "https://confluence.atlassian.com/bitbucketserver/managing-personal-access-tokens-1005339986.html"
 )
 
 func newAuthCmd(g *GlobalFlags) *cobra.Command {
@@ -89,11 +89,12 @@ Examples:
 			}
 
 			if host == "" {
-				if k == config.KindCloud {
+				switch {
+				case k == config.KindCloud:
 					host = "https://bitbucket.org"
-				} else if interactive {
+				case interactive:
 					host = prompt("Bitbucket Data Center host (e.g. https://bitbucket.example.com): ")
-				} else {
+				default:
 					return fmt.Errorf("--host is required for Data Center logins")
 				}
 			}
