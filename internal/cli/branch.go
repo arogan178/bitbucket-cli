@@ -1,8 +1,9 @@
 package cli
 
 import (
-	"github.com/arogan178/bitbucket-cli/internal/bitbucket"
 	"github.com/spf13/cobra"
+
+	"github.com/arogan178/bitbucket-cli/internal/bitbucket"
 )
 
 func newBranchCmd(g *GlobalFlags) *cobra.Command {

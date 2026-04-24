@@ -8,10 +8,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/arogan178/bitbucket-cli/internal/bitbucket"
-	"github.com/arogan178/bitbucket-cli/internal/output"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
+
+	"github.com/arogan178/bitbucket-cli/internal/bitbucket"
+	"github.com/arogan178/bitbucket-cli/internal/output"
 )
 
 func newPRCmd(g *GlobalFlags) *cobra.Command {

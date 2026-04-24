@@ -6,9 +6,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/arogan178/bitbucket-cli/internal/auth"
 	"github.com/arogan178/bitbucket-cli/internal/config"
-	"github.com/spf13/cobra"
 )
 
 func newAuthCmd(g *GlobalFlags) *cobra.Command {

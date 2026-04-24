@@ -14,8 +14,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/arogan178/bitbucket-cli/internal/config"
 	"github.com/zalando/go-keyring"
+
+	"github.com/arogan178/bitbucket-cli/internal/config"
 )
 
 const (

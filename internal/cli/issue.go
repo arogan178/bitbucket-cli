@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/arogan178/bitbucket-cli/internal/bitbucket"
 	"github.com/spf13/cobra"
+
+	"github.com/arogan178/bitbucket-cli/internal/bitbucket"
 )
 
 func newIssueCmd(g *GlobalFlags) *cobra.Command {

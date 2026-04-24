@@ -3,10 +3,11 @@ package cli
 import (
 	"fmt"
 
+	"github.com/spf13/cobra"
+
 	"github.com/arogan178/bitbucket-cli/internal/auth"
 	"github.com/arogan178/bitbucket-cli/internal/config"
 	"github.com/arogan178/bitbucket-cli/internal/output"
-	"github.com/spf13/cobra"
 )
 
 func newContextCmd(g *GlobalFlags) *cobra.Command {
