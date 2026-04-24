@@ -26,11 +26,11 @@ builds:
       - -X main.Date={{ .Date }}
 
 archives:
-  - format: tar.gz
+  - formats: ["tar.gz"]
     name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     format_overrides:
       - goos: windows
-        format: zip
+        formats: ["zip"]
     files:
       - LICENSE
       - README.md
@@ -40,7 +40,7 @@ checksum:
   name_template: "{{ .ProjectName }}_{{ .Version }}_checksums.txt"
 
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  version_template: "{{ incpatch .Version }}-next"
 
 changelog:
   sort: asc
@@ -129,4 +129,4 @@ release:
     name: bitbucket-cli
   draft: false
   prerelease: auto
-  mode: append
+  mode: replace
